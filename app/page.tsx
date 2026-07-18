@@ -5,9 +5,12 @@ const research = [
 ];
 
 const timeline = [
-  ["NOW", "PhD Candidate", "Micro & Nano Systems · KTH Royal Institute of Technology"],
-  ["2020 — 2022", "MEMS R&D Engineer", "Huawei 2012 Laboratories · MEMS sensors & actuators"],
-  ["2019", "MSc, Electrical Engineering", "Zhejiang University · Piezoelectric ultrasonic transducers"],
+  ["2021 — Present", "PhD Candidate · KTH", "Nanopore devices for single-molecule sensing, 3D micro/nanofabrication and conformal thin-film patterning."],
+  ["2020 — 2021", "MEMS Engineer · Huawei HiSilicon", "Electrostatic micromirror testing, robustness and failure analysis for optical attenuation systems."],
+  ["2019 — 2020", "Sensor Lab Engineer · Huawei", "Piezoelectric haptic ClickPad and phone-key actuator development, from design through product launch."],
+  ["2017 — 2019", "MSc · Zhejiang University", "pMUT ultrasonic ranging, acoustic logic and resonant-sensor research in electro-mechanical engineering."],
+  ["2016 — 2017", "MEMS Resonator Research", "Double-ended tuning-fork accelerometer research: high-Q resonator design and multimode suppression."],
+  ["2011 — 2015", "BSc · Xi'an Jiaotong University", "Mechanics."],
 ];
 
 export default function Home() {
@@ -59,7 +62,7 @@ export default function Home() {
         <div className="people-strip"><img src="/Xinxin/cleanroom-xinxin.jpeg" alt="Xinxin Liu in a cleanroom holding a microfabricated wafer"/><div><p className="eyebrow"><i /> MAKING AT THE NANO-SCALE</p><h3>From cleanroom process to functional system.</h3><p>Device fabrication, thin-film processing and nanopore technology connect research questions with manufacturable microsystems.</p></div><img className="nordpore-poster" src="/Xinxin/nordpore-poster.jpg" alt="NORDPORE solid-state nanopore manufacturing"/></div>
       </section>
 
-      <section id="path" className="path"><div className="shell"><div className="section-head"><p className="eyebrow"><i /> TRAJECTORY</p><p className="index">2019 — NOW</p></div><div className="path-grid"><h2>Built from<br/><em>the ground up.</em></h2><div className="timeline">{timeline.map(([year, title, text]) => <div className="timeline-item" key={year}><span>{year}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div></div></div></section>
+      <section id="path" className="path"><div className="shell"><div className="section-head"><p className="eyebrow"><i /> EXPERIENCE &amp; EDUCATION</p><p className="index">2011 — NOW</p></div><div className="path-grid"><h2>A path through<br/><em>micro &amp; nanosystems.</em></h2><div className="timeline">{timeline.map(([year, title, text]) => <div className="timeline-item" key={year}><span>{year}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div></div></div></section>
 
       <section id="connect" className="connect shell"><p className="eyebrow"><i /> COLLABORATE</p><h2>Have a hard problem<br/>at a <em>small scale?</em></h2><a className="contact-email" href="mailto:xinxinl@kth.se">xinxinl@kth.se <span>↗</span></a><div className="connect-links"><a href="https://scholar.google.com/citations?hl=en&user=wsipcvAAAAAJ" target="_blank" rel="noreferrer">Google Scholar ↗</a><a href="https://orcid.org/0000-0001-9803-6076" target="_blank" rel="noreferrer">ORCID ↗</a><a href="https://www.kth.se/profile/xinxinl" target="_blank" rel="noreferrer">KTH ↗</a></div></section>
       <footer className="shell"><span>© {new Date().getFullYear()} XINXIN LIU</span><span>DESIGNED FOR DISCOVERY</span></footer>
