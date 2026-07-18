@@ -7,25 +7,31 @@ const publications = [
 ];
 
 const timeline = [
-  ["2017-2019", "Zhejiang University", "MSc student, Electro-Mechanical Engineering. Research in piezoelectric MEMS, pMUT ultrasonic ranging and resonant sensors."],
-  ["2019-2020", "Huawei Sensor Lab", "Engineer. Developed piezoelectric haptic actuators for PC ClickPad and phone-key modules."],
-  ["2020-2021", "Huawei HiSilicon", "Engineer. Performed robustness and failure analysis of electrostatic micromirrors for optical attenuation."],
   ["2021-present", "KTH Royal Institute of Technology", "PhD candidate in Micro and Nanosystems. Research focus: nanofabrication for nanopore devices and 3D microstructures."],
+  ["2020-2021", "Huawei HiSilicon", "Engineer. Performed robustness and failure analysis of electrostatic micromirrors for optical attenuation."],
+  ["2019-2020", "Huawei Sensor Lab", "Engineer. Developed piezoelectric haptic actuators for PC ClickPad and phone-key modules."],
+  ["2017-2019", "Zhejiang University", "MSc student, Electro-Mechanical Engineering. Research in piezoelectric MEMS, pMUT ultrasonic ranging and resonant sensors."],
 ];
+
+function authorsWithName(authors: string) {
+  const [before, after] = authors.split("Xinxin Liu");
+  return <>{before}<strong>Xinxin Liu</strong>{after}</>;
+}
 
 export default function Home() {
   return <main className="formal-site">
     <header className="formal-nav"><a href="#home" className="formal-name">Xinxin</a><nav><a href="#home">Home</a><a href="#publications">Publication</a><a href="#about">About me</a></nav></header>
-    <section id="home" className="formal-home">
+    <section id="home" className="formal-home"><img src="/Xinxin/xinxin-portrait.jpg" alt="Xinxin Liu" className="formal-portrait" />
       <div><h1>Xinxin Liu</h1><p>PhD candidate in Micro and Nanosystems<br/>KTH Royal Institute of Technology, Stockholm</p></div>
       <div className="formal-contact"><a href="mailto:xinxinl@kth.se">xinxinl@kth.se</a><a href="https://orcid.org/0000-0001-9803-6076" target="_blank" rel="noreferrer">ORCID 0000-0001-9803-6076</a></div>
     </section>
-    <section className="formal-projects"><h2>Nanofabrication</h2><p className="formal-intro">I develop fabrication approaches for micro- and nanosystems, with current work spanning three-dimensional patterning and solid-state nanopore devices.</p>
+    <section className="formal-projects"><h2>MEMS &amp; Nanofabrication</h2><p className="formal-intro">I develop fabrication approaches for micro- and nanosystems, with current work spanning three-dimensional patterning and solid-state nanopore devices.</p>
       <article className="formal-project"><div><h3>3D patterning</h3><p>Scaffold-Architected Lift-Off (SALO) enables conformal thin-film patterning on complex three-dimensional structures.</p><a href="https://www.nature.com/articles/s41467-026-75538-z" target="_blank" rel="noreferrer">Nature Communications paper</a></div><div className="formal-video"><iframe src="https://www.youtube-nocookie.com/embed/bwPk-3icRJ0?rel=0" title="3D lift-off demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen /></div></article>
       <article className="formal-project"><div><h3>Solid-state nanopore</h3><p>Nanopore devices and nanogap sensing concepts for single-molecule measurement and biomedical applications.</p><a href="https://www.kth.se/mst/research/nems-and-nanosystems/project/nanogap-tunnelling-sensors-1.864206" target="_blank" rel="noreferrer">KTH project</a></div><img src="/Xinxin/cleanroom-xinxin.jpeg" alt="Xinxin Liu in a cleanroom" /></article>
       <article className="formal-project"><div><h3>NORDPORE</h3><p>Solid-state nanopore chips and microfluidic flowcells with tunable geometry for molecular analysis.</p><a href="https://www.nordpore.com/" target="_blank" rel="noreferrer">NORDPORE</a></div><img src="/Xinxin/nordpore-poster.jpg" alt="NORDPORE" /></article>
+      <article className="formal-project"><div><h3>pMUT ultrasonic sensing</h3><p>Piezoelectric micromachined ultrasonic transducers for ranging, resonant sensing and acoustic communication.</p><a href="https://doi.org/10.1063/1.5100201" target="_blank" rel="noreferrer">Journal of Applied Physics</a></div><img src="/Xinxin/pmut-rangefinder.png" alt="Pulse and echo principle of ultrasonic ranging" /></article>
     </section>
-    <section id="publications" className="formal-publications"><h2>Publications</h2>{["2026", "2019", "2018"].map(year => <div className="pub-year" key={year}><p>{year}</p><div>{publications.filter(item => item.year === year).map(item => <article key={item.title}><a href={item.link} target="_blank" rel="noreferrer">{item.title}</a><p><strong>{item.authors}</strong><br/><strong>{item.venue}</strong></p></article>)}</div></div>)}</section>
+    <section id="publications" className="formal-publications"><h2>Publications</h2>{["2026", "2019", "2018"].map(year => <div className="pub-year" key={year}><p>{year}</p><div>{publications.filter(item => item.year === year).map(item => <article key={item.title}><a href={item.link} target="_blank" rel="noreferrer">{item.title}</a><p>{authorsWithName(item.authors)}<br/><strong>{item.venue}</strong></p></article>)}</div></div>)}</section>
     <section id="about" className="formal-about"><h2>About me</h2><p className="formal-intro">My background bridges mechanical engineering, piezoelectric MEMS, industrial device development and nanofabrication research.</p><div className="formal-timeline">{timeline.map(([time, organisation, description]) => <article key={time}><div className="timeline-org"><p>{time}</p><strong>{organisation}</strong></div><div className="timeline-point"/><div className="timeline-role"><p>{description}</p></div></article>)}</div></section>
     <footer>© {new Date().getFullYear()} Xinxin Liu</footer>
   </main>;

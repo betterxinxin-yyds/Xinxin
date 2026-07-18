@@ -7,6 +7,8 @@ import "../app/reference-layout.css";
 import "../app/media-showcase.css";
 import "../app/minimal-editorial.css";
 import "../app/formal.css";
+import "../app/formal-refine.css";
+import "../app/formal-tweaks.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode><Portfolio /></StrictMode>,
