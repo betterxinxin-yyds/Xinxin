@@ -16,7 +16,7 @@ export default function Home() {
       <div className="noise" />
       <nav className="nav shell">
         <a className="brand" href="#top" aria-label="Xinxin Liu home">XL<span>·</span></a>
-        <div className="navlinks"><a href="#research">Research</a><a href="#path">Path</a><a href="#connect">Connect</a></div>
+        <div className="navlinks"><a href="#research">Research</a><a href="#work">Selected work</a><a href="#path">Path</a><a href="#connect">Connect</a></div>
         <a className="nav-cta" href="mailto:xinxinl@kth.se">Start a conversation <b>↗</b></a>
       </nav>
 
@@ -40,6 +40,14 @@ export default function Home() {
         <div className="section-head"><p className="eyebrow"><i /> FOCUS AREAS</p><p className="index">01 — 03</p></div>
         <h2>Research with<br/>resolution.</h2>
         <div className="research-grid">{research.map(([number, title, text]) => <article className="research-card" key={number}><span className="card-number">{number}</span><div className="card-mark">✦</div><h3>{title}</h3><p>{text}</p><a href="mailto:xinxinl@kth.se">Discuss this work <span>↗</span></a></article>)}</div>
+      </section>
+
+      <section id="work" className="featured shell">
+        <div className="section-head"><p className="eyebrow"><i /> SELECTED WORK</p><p className="index">RESEARCH / TRANSLATION</p></div>
+        <div className="featured-grid">
+          <article className="feature-paper"><p className="feature-kicker">NATURE COMMUNICATIONS · 2026</p><h2>Lithographic patterning of conformal thin films on 3D structures.</h2><p>Co-author of a Scaffold-Architected Lift-Off (SALO) approach for high-resolution patterning of conformal thin films on complex three-dimensional micro- and nanostructures, including ALD coatings.</p><a className="button primary" href="https://www.nature.com/articles/s41467-026-75538-z" target="_blank" rel="noreferrer">Read the paper <span>↗</span></a></article>
+          <aside className="feature-side"><div><span>01</span><h3>Nanopore sensing</h3><p>Solid-state nanopores, ionic-current readout and molecular sensing platforms within the QuantumSense research context.</p></div><div><span>02</span><h3>NORDPORE</h3><p>Solid-state nanopore chips and microfluidic flowcells for precision, geometry-tunable molecular analysis.</p><a href="https://www.nordpore.com/" target="_blank" rel="noreferrer">Explore NORDPORE ↗</a></div></aside>
+        </div>
       </section>
 
       <section id="path" className="path"><div className="shell"><div className="section-head"><p className="eyebrow"><i /> TRAJECTORY</p><p className="index">2019 — NOW</p></div><div className="path-grid"><h2>Built from<br/><em>the ground up.</em></h2><div className="timeline">{timeline.map(([year, title, text]) => <div className="timeline-item" key={year}><span>{year}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div></div></div></section>
