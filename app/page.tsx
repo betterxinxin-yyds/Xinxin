@@ -13,11 +13,17 @@ const timeline = [
   ["2017-2019", "Zhejiang University", "MSc student, Electro-Mechanical Engineering. Research in piezoelectric MEMS, pMUT ultrasonic ranging and resonant sensors."],
 ];
 
+function EmailLink() {
+  const user = "xinxinl";
+  const host = "kth.se";
+  return <a href="#email" onClick={(event) => { event.preventDefault(); window.location.href = `mailto:${user}@${host}`; }}>Email me</a>;
+}
+
 export default function Home() {
   return <main className="formal-site">
     <header className="formal-nav"><a href="#home" className="formal-name">Xinxin</a><nav><a href="#home">Home</a><a href="#publications">Publication</a><a href="#about">About me</a></nav></header>
     <section id="home" className="formal-home"><img src="/Xinxin/xinxin-portrait.jpg" alt="Xinxin Liu" className="formal-portrait" />
-      <div className="formal-identity"><h1>Xinxin Liu</h1><div className="formal-contact"><a href="mailto:xinxinl@kth.se">xinxinl@kth.se</a><a href="https://orcid.org/0000-0001-9803-6076" target="_blank" rel="noreferrer">ORCID 0000-0001-9803-6076</a></div><p>PhD candidate in Micro and Nanosystems<br/>KTH Royal Institute of Technology, Stockholm</p></div>
+      <div className="formal-identity"><h1>Xinxin Liu</h1><div className="formal-contact"><EmailLink /><a href="https://orcid.org/0000-0001-9803-6076" target="_blank" rel="noreferrer">ORCID 0000-0001-9803-6076</a></div><p>PhD candidate in Micro and Nanosystems<br/>KTH Royal Institute of Technology, Stockholm</p></div>
       <p className="formal-home-summary">I develop fabrication approaches for micro- and nanosystems, with current work spanning three-dimensional patterning and solid-state nanopore devices.</p>
     </section>
     <section className="formal-projects"><h2>MEMS &amp; Nanofabrication</h2>
