@@ -10,6 +10,7 @@ import "../app/formal.css";
 import "../app/formal-refine.css";
 import "../app/formal-tweaks.css";
 import "../app/formal-final.css";
+import "../app/formal-art.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode><Portfolio /></StrictMode>,
