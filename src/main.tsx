@@ -6,6 +6,7 @@ import "../app/featured.css";
 import "../app/reference-layout.css";
 import "../app/media-showcase.css";
 import "../app/minimal-editorial.css";
+import "../app/formal.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode><Portfolio /></StrictMode>,
