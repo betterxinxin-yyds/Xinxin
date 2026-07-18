@@ -38,7 +38,7 @@ export default function Home() {
 
       <section id="research" className="research shell">
         <div className="section-head"><p className="eyebrow"><i /> FOCUS AREAS</p><p className="index">01 — 03</p></div>
-        <h2>Research with<br/>resolution.</h2>
+        <h2>Techniques &amp;<br/><em>research directions.</em></h2>
         <div className="research-grid">{research.map(([number, title, text]) => <article className="research-card" key={number}><span className="card-number">{number}</span><div className="card-mark">✦</div><h3>{title}</h3><p>{text}</p><a href="mailto:xinxinl@kth.se">Discuss this work <span>↗</span></a></article>)}</div>
       </section>
 
