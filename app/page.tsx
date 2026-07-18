@@ -50,6 +50,15 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="fieldwork shell">
+        <div className="section-head"><p className="eyebrow"><i /> FROM CONCEPT TO DEVICE</p><p className="index">WATCH / SEE / BUILD</p></div>
+        <div className="fieldwork-grid">
+          <figure className="sem-figure"><img src="/Xinxin/salo-sem.jpg" alt="Scanning electron microscope image of a patterned three-dimensional microstructure"/><figcaption>SALO on a stepped 3D structure · SEM image</figcaption></figure>
+          <div className="video-card"><div className="video-wrap"><iframe src="https://www.youtube-nocookie.com/embed/bwPk-3icRJ0?rel=0" title="3D lift-off demonstration" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen /></div><p>3D lift-off in motion</p><span>A process demonstration of patterning on complex microstructures.</span></div>
+        </div>
+        <div className="people-strip"><img src="/Xinxin/cleanroom-xinxin.jpeg" alt="Xinxin Liu in a cleanroom holding a microfabricated wafer"/><div><p className="eyebrow"><i /> MAKING AT THE NANO-SCALE</p><h3>From cleanroom process to functional system.</h3><p>Device fabrication, thin-film processing and nanopore technology connect research questions with manufacturable microsystems.</p></div><img className="nordpore-poster" src="/Xinxin/nordpore-poster.jpg" alt="NORDPORE solid-state nanopore manufacturing"/></div>
+      </section>
+
       <section id="path" className="path"><div className="shell"><div className="section-head"><p className="eyebrow"><i /> TRAJECTORY</p><p className="index">2019 — NOW</p></div><div className="path-grid"><h2>Built from<br/><em>the ground up.</em></h2><div className="timeline">{timeline.map(([year, title, text]) => <div className="timeline-item" key={year}><span>{year}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}</div></div></div></section>
 
       <section id="connect" className="connect shell"><p className="eyebrow"><i /> COLLABORATE</p><h2>Have a hard problem<br/>at a <em>small scale?</em></h2><a className="contact-email" href="mailto:xinxinl@kth.se">xinxinl@kth.se <span>↗</span></a><div className="connect-links"><a href="https://scholar.google.com/citations?hl=en&user=wsipcvAAAAAJ" target="_blank" rel="noreferrer">Google Scholar ↗</a><a href="https://orcid.org/0000-0001-9803-6076" target="_blank" rel="noreferrer">ORCID ↗</a><a href="https://www.kth.se/profile/xinxinl" target="_blank" rel="noreferrer">KTH ↗</a></div></section>
