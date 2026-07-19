@@ -10,7 +10,7 @@ const timeline = [
   ["2021-present", "KTH Royal Institute of Technology", "PhD candidate in Micro and Nanosystems. Research focus: nanofabrication for nanopore devices and 3D microstructures."],
   ["2020-2021", "Huawei HiSilicon", "Engineer. Performed robustness and failure analysis of electrostatic micromirrors for optical attenuation."],
   ["2019-2020", "Huawei Sensor Lab", "Engineer. Developed piezoelectric haptic actuators for PC ClickPad and phone-key modules."],
-  ["2017-2019", "Zhejiang University", "MSc student, Electro-Mechanical Engineering. Research in piezoelectric MEMS, pMUT ultrasonic ranging and resonant sensors."],
+  ["2016-2019", "Zhejiang University", "MSc student, Electro-Mechanical Engineering. Research in piezoelectric MEMS, pMUT ultrasonic ranging and resonant sensors."],
 ];
 
 export default function Home() {
