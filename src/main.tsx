@@ -11,6 +11,7 @@ import "../app/formal-refine.css";
 import "../app/formal-tweaks.css";
 import "../app/formal-final.css";
 import "../app/formal-art.css";
+import "../app/chip-timeline.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode><Portfolio /></StrictMode>,
