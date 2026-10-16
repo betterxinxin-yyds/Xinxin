@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111938">
+  <title>Chart Quest · 手机盲练</title>
+  <link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+  <div class="sky sky-a"></div><div class="sky sky-b"></div><div class="stars" aria-hidden="true"></div>
+  <main class="phone-shell">
+    <header class="mobile-top"><button class="icon-btn" id="homeBtn" aria-label="回到关卡">⌂</button><div class="brand"><span>CHART</span> QUEST</div><button class="icon-btn" id="exportBtn" aria-label="导出记录">⇩</button></header>
+
+    <section id="lobby" class="view">
+      <div class="hero-card">
+        <div class="hero-copy"><span class="eyebrow">MOBILE PRACTICE</span><h1>读懂下一根<br><em>不急着知道答案</em></h1><p>碎片时间练习读图、判断与复盘。所有 Brooks 答案只留在你的本地完整版。</p></div>
+        <img class="buddy" src="assets/chart-buddy.png" alt="Chart Quest mascot">
+        <div class="float-orb orb-one"></div><div class="float-orb orb-two"></div>
+      </div>
+      <div class="streak-card"><div><span class="eyebrow">YOUR RHYTHM</span><strong id="sessionCount">0</strong><small>次盲练已保存</small></div><div class="streak-icon">✦</div></div>
+      <div class="section-title"><div><span class="eyebrow">PICK A CHART</span><h2>选择一段走势</h2></div><span class="pill">无答案</span></div>
+      <div class="day-list" id="dayList"></div>
+      <p class="lobby-note">记录仅保存在这台设备。完成后可导出 JSON，在你的本地完整版本中留档复盘。</p>
+    </section>
+
+    <section id="practice" class="view hidden">
+      <div class="practice-head"><div><span class="eyebrow" id="dayEyebrow">TODAY'S CHART</span><h2 id="dayTitle">Loading…</h2></div><button class="quit-btn" id="quitBtn">保存并退出</button></div>
+      <div class="progress-row"><div class="level-dots" id="levelDots"></div><span id="barCount">0 / 0</span></div>
+      <div class="chart-card"><canvas id="chart" aria-label="ES 5 minute chart"></canvas><div class="chart-glow"></div><div class="candle-badge" id="candleBadge">第 1 根</div></div>
+      <section class="prompt-card">
+        <div class="prompt-copy"><span class="tiny-mark">✦</span><p id="promptText">看这一根收盘后，你的第一判断是什么？</p></div>
+        <div class="choice-row" id="aiChoices"><button data-group="ai" data-value="多">↗ 多</button><button data-group="ai" data-value="空">↘ 空</button><button data-group="ai" data-value="不明确">？ 不明</button></div>
+        <p class="mini-label">你看到的环境</p>
+        <div class="choice-row four" id="ctxChoices"><button data-group="ctx" data-value="趋势">趋势</button><button data-group="ctx" data-value="通道">通道</button><button data-group="ctx" data-value="区间">区间</button><button data-group="ctx" data-value="不确定">不确定</button></div>
+        <div class="signal-line"><span>这是一根信号 K 吗？</span><div id="signalChoices"><button data-group="signal" data-value="yes">是</button><button data-group="signal" data-value="no">否</button></div></div>
+      </section>
+      <section class="note-card"><label for="note">一句话记录 <span>可选</span></label><textarea id="note" maxlength="280" placeholder="例如：二次测试失败，先不追…"></textarea><div class="idea-row"><span>我的计划</span><div id="ideaChoices"><button data-group="idea" data-value="观察">观察</button><button data-group="idea" data-value="找多">找多</button><button data-group="idea" data-value="找空">找空</button><button data-group="idea" data-value="不交易">不交易</button></div></div></section>
+      <footer class="action-dock"><button id="backBtn" class="round-action" aria-label="上一根">‹</button><button id="nextBtn" class="next-action">记录判断，下一根 <span>→</span></button></footer>
+    </section>
+
+    <section id="finish" class="view hidden finish-view">
+      <div class="finish-burst">✦</div><img class="finish-buddy" src="assets/chart-buddy.png" alt="">
+      <span class="eyebrow">SESSION SAVED</span><h1>这一段，<br>你读完了。</h1><p id="finishText">你的判断与想法已经保存。</p>
+      <div class="finish-actions"><button class="next-action" id="finishExport">导出本次记录 <span>⇩</span></button><button class="soft-action" id="finishHome">再练一段</button></div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="data/index.js"></script>
+  <script src="mobile.js"></script>
+</body>
+</html>
