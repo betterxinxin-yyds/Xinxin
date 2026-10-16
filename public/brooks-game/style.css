@@ -202,7 +202,6 @@ th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line
 .pz-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
 .pz-timer { height: 4px; background: #eef0f3; border-radius: 2px; overflow: hidden; margin-bottom: 6px; } #pzTimerBar { height: 100%; width: 0; background: var(--brooks); transition: width .2s linear; }
 #cvPuzzle { width: 100%; height: 440px; display: block; }
-#pzImg { width: 100%; display: block; } #pzImgOv { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
 #pzBox .quote { margin: 6px 0; padding: 6px 8px; background: #f7f8fa; border-radius: 6px; font-size: 13px; line-height: 1.5; }
 @media (max-width: 1200px) { .pz-grid, .pz-grid2 { grid-template-columns: 1fr; } }
 

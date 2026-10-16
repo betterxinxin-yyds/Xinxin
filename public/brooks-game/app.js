@@ -70,7 +70,7 @@ function prepDay(g) {
   const de = emaSeries(g.daily.map((b) => b.c)); g.daily.forEach((b, i) => b.ema = de[i]);
   g.yH = Math.max(...yd.map((b) => b.h)); g.yL = Math.min(...yd.map((b) => b.l)); g.yC = yd[yd.length - 1].c;
   if (g.globex.length) { g.gH = Math.max(...g.globex.map((b) => b.h)); g.gL = Math.min(...g.globex.map((b) => b.l)); g.gLast = g.globex[g.globex.length - 1].c; }
-  g.tail = yd.slice(-TAIL); g.K = decodeKey(g.key); g.auto = autoRead([...yd.slice(-20), ...td], Math.min(20, yd.length));
+  g.tail = yd.slice(-TAIL); g.K = { premarket_questions: [], checkpoints: [], arrows: [], phases: [] }; g.auto = autoRead([...yd.slice(-20), ...td], Math.min(20, yd.length));
   const allB = [...yd, ...td]; g.tags = td.map((b, i) => barTags(b, allB[yd.length + i - 1], allB.slice(Math.max(0, yd.length + i - 20), yd.length + i), td.slice(0, i + 1)));
   g.mc = microChannels(td); g.runs = trendRuns(td); g.hl = barCounts(td, g.auto.map((a) => a.ai));   // 微通道、连续趋势 K（autoread.js，只用已出现的 K 线）
   g.gap = td[0].o - g.yC; g._prepped = true; return g;
@@ -169,7 +169,7 @@ function renderPre() {
 function askPre(i) { const qs = K.premarket_questions; S.preI = i;
   if (!askOn() && i < qs.length) { qs.slice(i).forEach((q) => { if (!S.answers[q.id]) S.skipped[q.id] = true; });
     $('#preQ').innerHTML = `<p class="small muted">Brooks 提问已关闭（右上角开关），开盘前问题跳过，不计分。</p><button class="btn primary lg" id="btnOpen">开盘 ▶</button>`; $('#btnOpen').onclick = startPlay; return; }
-  if (i >= qs.length) { $('#preQ').innerHTML = `<p class="small muted">开盘前问题已答完。</p><button class="btn primary lg" id="btnOpen">开盘 ▶</button>`; $('#btnOpen').onclick = startPlay; return; }
+  if (i >= qs.length) { $('#preQ').innerHTML = `<p class="small muted">准备完成。此练习端不显示答案或提示。</p><button class="btn primary lg" id="btnOpen">开盘 ▶</button>`; $('#btnOpen').onclick = startPlay; return; }
   renderQuestion($('#preQ'), qs[i], () => askPre(i + 1)); }
 
 // ================================================================ Brooks 原话
@@ -331,7 +331,7 @@ function drawLabel(ctx, F, l, color) { const b = barAt(l.i); if (!b) return; ctx
   ctx.fillStyle = color; ctx.textBaseline = 'middle'; ctx.fillText(l.code, x + 5, y + 9); l._box = { x, y, w, h: 17 }; }
 
 // ================================================================ 逐根
-function startPlay() { show('#scrPlay'); $('#askBox').innerHTML = askOn() ? '<div class="empty">走到 Brooks 有评论的 K 线时，问题会出现在这里。</div>' : '<div class="empty">Brooks 提问已关闭（右上角开关）。打开后，后面的提问会照常出现。</div>'; buildPalette(); buildGuides(); setSeg('#segAI', S.curAI); setSeg('#segCtx', S.curCtx); switchTab('trade'); renderSide(); drawMain(); logEv('open'); }
+function startPlay() { show('#scrPlay'); $('#askBox').innerHTML = '<div class="empty">手机练习端不提供答案或提示。完成后请导出记录，在本地完整版本中复盘。</div>'; buildPalette(); buildGuides(); setSeg('#segAI', S.curAI); setSeg('#segCtx', S.curCtx); switchTab('trade'); renderSide(); drawMain(); logEv('open'); }
 function next() {
   if (modalOpen() || S.finished) return; if (S.blocked) { switchTab('ask'); flash($('#askBox')); return; }
   if (S.n >= G.rth.length) return finishDay();
@@ -506,11 +506,13 @@ function toggleAuto() { if (autoTimer) return stopAuto(); autoTimer = setInterva
 
 // ================================================================ 收盘：盘中打分
 function finishDay() {
-  if (S.finished) return; const pend = K.checkpoints.find((c) => c.after_bar <= S.n && !S.answers[c.id] && !S.skipped[c.id]);
-  if (pend) { if (askOn()) return askCheckpoint(pend); K.checkpoints.forEach((c) => { if (!S.answers[c.id]) S.skipped[c.id] = true; }); }
+  if (S.finished) return;
   if (S.pos) exitPos(S.pos.qty, G.rth[G.rth.length - 1].c, '收盘平仓');
   S.orders = []; S.finished = true; S.endedAt = new Date().toISOString(); S.tool = null; stopAuto();
-  S.score = scorePlay(); const st = loadStore(); st.sessions.push(summaryOf()); addWrong(st, playWrongs()); saveStore(st); startReview();
+  const st = loadStore(); st.sessions.push({ date: S.date, mode: '手机盲练', startedAt: S.startedAt, endedAt: S.endedAt, trades: S.trades, signals: S.signals, ai: S.ai, ctx: S.ctx, labels: S.labels, hlines: S.hlines, mms: S.mms, log: S.log, totalR: r2(S.trades.reduce((sum, trade) => sum + trade.R, 0)), rewinds: S.rewinds || 0, score: { total: 0, max: 0, parts: [] }, quiz: {}, skippedQ: 0, entriesCaught: 0, signalsSeen: 0, arrows: 0, falseSignals: 0, phasePct: 0, reviewScore: null, hlq: [] }); saveStore(st);
+  openModal(`<h3>本局已保存</h3><p class="small muted">你的判断、交易、标注和反馈已保存在这台手机。请导出记录，并在本地完整版本中导入后与答案复盘。</p><div class="row"><button class="btn primary" id="practiceExport">导出本局记录</button><button class="btn" id="practiceHome">返回关卡</button></div>`);
+  $('#practiceExport').onclick = () => download(`brooks-practice-${S.date}-${S.startedAt.slice(0, 16).replace(/[:T]/g, '')}.json`, loadStore());
+  $('#practiceHome').onclick = () => { closeModal(); renderHome(); };
 }
 function phaseAgreement() { let tot = 0, ok = 0; (K.phases || []).forEach((p) => { for (let i = p.from; i <= p.to; i++) { tot++; if (p.ok.includes(S.ctx[i])) ok++; } }); return { tot, ok, pct: tot ? ok / tot : 0 }; }
 function overrideStats() {
@@ -626,7 +628,6 @@ function buildSteps() {
 function startReview() {
   show('#scrReview'); $('#levelInfo').textContent = `· ${G.date} · 复盘工作室`;
   S.review = S.review || { steps: buildSteps(), idx: 0, grades: {}, filter: '全部', tab: 'walk', traces: {}, cur: null, pts: [], layers: { trades: 1, signals: 1, labels: 0, lines: 0, brooks: 1, levels: 0 }, sync: null };
-  const img = $('#imgBrooks'); img.onerror = () => { img.classList.add('hidden'); $('#imgMissing').textContent = G.close_image ? '找不到原图：请重新运行 build.py。' : '这一天没有可用的 Brooks 收盘图（资料里的图其实是另一天的），复盘只用报告文字。'; $('#imgMissing').classList.remove('hidden'); }; img.onload = () => drawOverlay(); img.src = G.close_image || K.source.summary_image;
   const names = { trades: '我的交易', signals: '我的信号 K', labels: '我的标注', lines: '我的线 / 测量', brooks: 'Brooks 入场箭头（蓝）', levels: '昨日 / 夜盘价位' };
   $('#layers').innerHTML = '<span class="jlabel">我的图 · 图层</span>' + Object.entries(names).map(([k, v]) => `<span class="chip ${S.review.layers[k] ? 'on' : ''}" data-l="${k}">${v}</span>`).join('');
   $$('#layers .chip').forEach((c) => c.onclick = () => { S.review.layers[c.dataset.l] ^= 1; c.classList.toggle('on'); drawReview(); });
@@ -641,16 +642,7 @@ function drawReview() {
   if (R.tab === 'trace') { R.pts.forEach((p) => marks.push({ type: 'ring', i: p.i, p: p.p, color: C.mine })); if (R.mmTemp) marks.push({ type: 'mm', mm: R.mmTemp, temp: true });
     if (t && R.traces[t.id]?.done) { traceAnswerMarks(t).forEach((m) => marks.push(m)); hl = traceRange(t); } }
   const F = drawChart($('#cvReview'), { mode: 'review', upto: G.rth.length, tail: false, layers: L, highlight: hl, cross: R.sync, marks }); R.F = F;
-  drawStrips($('#cvStrips2'), 0, G.rth.length, true); drawOverlay(hl);
-}
-function calibX(bar, w) { const c = K.calib; return (c.x0 + (bar - c.bar0) * c.dx) / c.img_w * w; }
-function drawOverlay(hl) {
-  const img = $('#imgBrooks'), cv = $('#cvImgOv'); if (!K.calib || !img.naturalWidth) return; const { ctx, W, H } = setupCanvas(cv); const R = S.review; if (!R) return;
-  if (hl === undefined) { const st = R.tab === 'walk' ? curStep() : null; hl = st ? [st.a, st.b] : null; }
-  const half = K.calib.dx / K.calib.img_w * W / 2;
-  if (hl) { ctx.fillStyle = 'rgba(47,111,228,.12)'; const x0 = calibX(hl[0], W) - half, x1 = calibX(hl[1], W) + half; ctx.fillRect(x0, H * 0.13, x1 - x0, H * 0.78); ctx.strokeStyle = 'rgba(47,111,228,.55)'; ctx.strokeRect(x0, H * 0.13, x1 - x0, H * 0.78); }
-  if (R.sync) { const x = calibX(R.sync, W); ctx.strokeStyle = C.brooks; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(x, H * 0.12); ctx.lineTo(x, H * 0.92); ctx.stroke(); ctx.setLineDash([]);
-    const t = `Bar ${R.sync}`; ctx.font = '11px -apple-system, sans-serif'; const w = ctx.measureText(t).width + 8; ctx.fillStyle = C.brooks; ctx.fillRect(x - w / 2, H * 0.92, w, 16); ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(t, x, H * 0.92 + 2); ctx.textAlign = 'left'; }
+  drawStrips($('#cvStrips2'), 0, G.rth.length, true);
 }
 function meAt(a, b) {
   const rng = (x) => x >= a - 1 && x <= b + 1; const seq = (obj) => { const out = []; for (let i = Math.max(1, a); i <= b; i++) { const v = obj[i] || '未选'; if (!out.length || out[out.length - 1].v !== v) out.push({ v, i }); } return out.map((x) => `${x.v}（B${x.i}）`).join(' → '); };
@@ -816,7 +808,8 @@ function drill(item) {
 
 // ================================================================ 绑定
 function bind() {
-  $('#btnHome').onclick = renderHome; $('#btnStats').onclick = renderStats;
+  $('#btnHome').onclick = renderHome;
+  $('#btnExportProgress').onclick = () => download('brooks-practice-progress.json', loadStore());
   $('#btnHelp').onclick = () => { openModal(`<h3>操作说明</h3><div class="small" style="line-height:1.85">
     <b>盘中（一键判断）</b><br>· 下一根：空格 / →。自动播放：A。Brooks 提问出现在右侧“Brooks 提问”标签页，答完才能继续；不想答可以用右上角“Brooks 提问”开关关掉（跳过的题不计分）。<br>
     · always-in：1 多 / 2 空 / 3 不明确。背景：Q 趋势 / W 通道 / E 区间 / R 不确定。图下方两条色带记录你每根的判断。<br>
@@ -832,13 +825,7 @@ function bind() {
     $('#fbNo').onclick = closeModal; $('#fbOk').onclick = () => { const t = $('#fbText').value.trim(); if (t) { const st = loadStore(); st.feedback.push({ at: new Date().toISOString(), date: G?.date, bar: S?.n, text: t }); saveStore(st); } closeModal(); }; };
   $('#btnNext').onclick = next; $('#btnBack').onclick = back; $('#btnAuto').onclick = toggleAuto;
   $$('#segAI button').forEach((b) => b.onclick = () => setAI(b.dataset.v)); $$('#segCtx button').forEach((b) => b.onclick = () => setCtx(b.dataset.v));
-  loadAskPref();
   $$('.switch input').forEach((el) => el.addEventListener('change', () => el.blur()));   // 点完开关，快捷键（空格 / →）照常可用
-  $('#tgAsk').onchange = () => { saveAskPref(); if (!S) return; logEv('ask_toggle', { on: askOn() });
-    if (!askOn()) { if (S.blocked) { S.skipped[S.blocked] = true; S.blocked = null; $('#btnNext').disabled = false; $('#askDot').classList.add('hidden'); const box = $('#askBox'); box.classList.remove('q-card'); switchTab('trade'); }
-      $('#askBox').innerHTML = '<div class="empty">Brooks 提问已关闭（右上角开关）。打开后，后面的提问会照常出现。</div>'; }
-    else if (!S.blocked) $('#askBox').innerHTML = '<div class="empty">走到 Brooks 有评论的 K 线时，问题会出现在这里。</div>';
-    if (!$('#scrPre').classList.contains('hidden')) askPre(S.preI); };
   $('#tgAuto').onclick = () => { S.autoOn = !S.autoOn; logEv('auto', { on: S.autoOn }); renderAuto(); };
   $('#btnSigL').onclick = () => markSignal('多'); $('#btnSigS').onclick = () => markSignal('空');
   $$('#sideTabs button').forEach((b) => b.onclick = () => switchTab(b.dataset.tab));
@@ -859,9 +846,6 @@ function bind() {
   rv.addEventListener('mouseleave', () => { if (S?.review) { S.review.sync = null; drawReview(); } });
   rv.addEventListener('mousedown', (ev) => { const { x, y } = posIn(ev, rv); if (S?.review && reviewDown(x, y)) ev.preventDefault(); });
   rv.addEventListener('click', (ev) => { const R = S?.review; if (!R || R.mmJust) { if (R) R.mmJust = false; return; } const t = R.cur && K.traces.find((z) => z.id === R.cur); if (t?.kind === 'mm') return; const { x, y } = posIn(ev, rv); reviewClick(x, y); });
-  const ov = $('#cvImgOv'); ov.addEventListener('mousemove', (ev) => { const R = S?.review; if (!R || !K.calib) return; const { x } = posIn(ev, ov); const w = ov.getBoundingClientRect().width;
-    const bar = Math.round(K.calib.bar0 + ((x / w * K.calib.img_w) - K.calib.x0) / K.calib.dx); R.sync = bar >= 1 && bar <= G.rth.length ? bar : null; drawReview(); });
-  ov.addEventListener('mouseleave', () => { if (S?.review) { S.review.sync = null; drawReview(); } });
   $('#btnExportAll').onclick = () => download('brooks-game-progress.json', loadStore());
   $('#fileImport').onchange = (e) => { const f = e.target.files[0]; if (!f) return; f.text().then((t) => { try { saveStore(JSON.parse(t)); renderStats(); } catch (x) { alert('文件格式不对'); } }); };
   $('#btnReset').onclick = () => { if (confirm('确定清空全部进度和错题本？（建议先导出）')) { saveStore({ sessions: [], feedback: [], wrong: [] }); renderStats(); } };
@@ -903,7 +887,7 @@ function renderPuzzle() { pzInit(); try { stopAuto(); } catch (e) { /* 没在玩
     $('#pzType').innerHTML = '<option value="">全部题型</option>' + Object.entries(PZ_TYPE).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
     ['#pzTheme', '#pzType', '#pzSrc'].forEach((s) => $(s).onchange = () => pzNext()); $('#pzSkip').onclick = () => pzNext(); }
   pzStats(); pzNext(); }
-function pzNext() { clearInterval(PZ.timer); $('#pzImgCard').classList.add('hidden'); const p = pzPick();
+function pzNext() { clearInterval(PZ.timer); const p = pzPick();
   if (!p) { PZ.cur = null; $('#pzBox').innerHTML = `<div class="empty">这个范围里没有题目。${$('#pzSrc').value === 'done' ? '“只出已玩过的关卡”要先在关卡里玩完至少一天。' : ''}</div>`; return; }
   PZ.cur = p; $('#pzBox').innerHTML = '<div class="empty">载入中…</div>';
   loadDay(p.d, (g) => { prepDay(g); PZ.g = g; drawPuzzleChart(p, 0); pzAsk(p); }); }
@@ -939,18 +923,13 @@ function pzAnswer(p, k) { if (PZ.answered === p.id) return; PZ.answered = p.id; 
     ${p.near ? `<div class="small" style="margin:4px 0">收盘图上这个入场附近：<b>${esc(p.near)}</b></div>` : ''}${ex || '<div class="muted small">这一题在报告里没有对应的原句，依据是 Brooks 收盘图上的箭头。</div>'}
     <div class="row" style="margin-top:8px"><button class="btn primary" id="pzNextBtn">下一题（空格）</button></div>`;
   $('#pzNextBtn').onclick = () => { PZ.answered = null; pzNext(); };
-  drawPuzzleChart(p, 12); pzShowImg(p); pzStats(); }
-function pzShowImg(p) { const g = PZ.g, K2 = g.K, img = $('#pzImg'); if (!g.close_image || !K2.calib) return; $('#pzImgCard').classList.remove('hidden');
-  img.onload = () => { const cv = $('#pzImgOv'), { ctx, W, H } = setupCanvas(cv), c = K2.calib, bar = p.sig || p.n, x = (c.x0 + (bar - c.bar0) * c.dx) / c.img_w * W;
-    ctx.strokeStyle = C.brooks; ctx.setLineDash([3, 3]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, H * 0.1); ctx.lineTo(x, H * 0.93); ctx.stroke(); ctx.setLineDash([]);
-    const t = `Bar ${bar}`; ctx.font = '11px -apple-system, sans-serif'; const w = ctx.measureText(t).width + 8; ctx.fillStyle = C.brooks; ctx.fillRect(x - w / 2, H * 0.93, w, 16); ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(t, x, H * 0.93 + 2); ctx.textAlign = 'left'; };
-  img.src = g.close_image; }
+  drawPuzzleChart(p, 12); pzStats(); }
 function pzStats() { const by = {}, items = Object.fromEntries(PZ.list.map((p) => [p.id, p])), H = PZ.st.hist;
   H.forEach((h) => { const p = items[h.id]; if (!p) return; (p.tags.length ? p.tags : ['（无主题）']).forEach((t) => { by[t] = by[t] || [0, 0]; by[t][1]++; if (h.ok) by[t][0]++; }); });
   const rows = Object.entries(by).filter(([, v]) => v[1] >= 1).sort((a, b) => a[1][0] / a[1][1] - b[1][0] / b[1][1]);
   $('#pzRating').textContent = PZ.st.rating; $('#pzSess').textContent = `${PZ.sess.ok}/${PZ.sess.n}`; $('#pzTotal').textContent = `${H.filter((h) => h.ok).length}/${H.length}`;
   $('#pzStats').innerHTML = rows.length ? `<table><tr><th>主题</th><th>答对</th><th>正确率</th></tr>${rows.map(([t, [o, n]]) => `<tr><td>${esc(t)}</td><td>${o}/${n}</td><td class="${o / n >= 0.7 ? 'win' : 'loss'}">${Math.round(o / n * 100)}%</td></tr>`).join('')}</table><div class="muted small">从低到高排，最上面的就是最该练的主题（在上方“主题”里选它专练）。</div>` : '<div class="empty">还没有答题记录。</div>'; }
-$('#btnPuzzle').onclick = renderPuzzle;
+const puzzleButton = $('#btnPuzzle'); if (puzzleButton) puzzleButton.onclick = renderPuzzle;
 document.addEventListener('keydown', (e) => { if ($('#scrPuzzle').classList.contains('hidden') || modalOpen() || ['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
   if (e.key === ' ' && $('#pzNextBtn')) { e.preventDefault(); $('#pzNextBtn').click(); }
   else if (/^[1-4]$/.test(e.key)) { const b = $$('#pzBox .opt')[+e.key - 1]; if (b && !b.disabled) b.click(); } });

@@ -12,10 +12,9 @@
   <div class="brand"><span class="logo">PA</span>Brooks 读图训练 <span style="font-size:11px;background:#7b5cd6;color:#fff;padding:2px 7px;border-radius:10px;margin-left:2px">第二版</span> <span class="lv" id="levelInfo"></span></div>
   <div class="top-actions">
     <label class="switch" title="鼠标停在标注上时显示简单解释"><input type="checkbox" id="tgTips" checked> 形态注释</label>
-    <label class="switch" title="关掉后，走到 Brooks 有评论的 K 线不再提问、不暂停；跳过的题不计分。开关会被记住"><input type="checkbox" id="tgAsk" checked> Brooks 提问</label>
+    <label class="switch practice-only">不含答案</label>
     <button class="tbtn" id="btnHome" title="关卡列表"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>关卡</button>
-    <button class="tbtn" id="btnPuzzle" title="关键 K 线决策题库：一题一个决策点，答完看 Brooks 原图和原句"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>决策题库</button>
-    <button class="tbtn" id="btnStats" title="统计、错题本、快速练习"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>统计与错题本</button>
+    <button class="tbtn" id="btnExportProgress" title="导出手机练习记录，在本地完整版本中导入并复盘"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>导出</button>
     <button class="tbtn" id="btnFeedback" title="随手记下想改进的地方"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg>反馈</button>
     <button class="tbtn" id="btnHelp" title="操作说明"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg>说明</button>
   </div>
@@ -24,8 +23,8 @@
 <!-- 关卡 -->
 <section id="scrHome" class="screen">
   <div class="home-wrap">
-    <div class="hero"><h2>一根一根地读 ES 5 分钟图，用 Brooks 当天的答案检验自己</h2>
-      <p><b>第二版：</b>K 线改用 TradingView 配色；always-in 和背景由软件按 Brooks 原则自动判读（可改判，也可以关掉自己练）；K 线类型（十字、外包、内包、反转 K、收盘位置、连续同向、开盘跳空）自动标注。<br>双顶 / 双底 / 楔形、强趋势 K 的自动识别在 10 月数据上与 Brooks 一致率未达 80%，暂不加入（详见 eval/pattern-eval.md）。<br>盘中：方向、背景、信号、下单，都是一键。走到 Brooks 有评论的 K 线会提问。<br>收盘后：在“复盘工作室”里逐条对照他的原图和原话，亲手描一遍双顶、楔形、等距目标和他的入场。</p></div>
+    <div class="hero"><h2>手机盲练：一根一根地读 ES 5 分钟图</h2>
+      <p>这是不含答案的练习端：记录你的 always-in、背景判断、信号 K、交易、标注和反馈。完成后点右上角“导出”，再将记录导入本地完整版本，与原始答案和复盘资料对照。</p></div>
     <div id="levelList" class="level-list"></div>
   </div>
 </section>
@@ -56,7 +55,6 @@
     <div class="card" id="pzBox"></div>
   </div>
   <div class="pz-grid2">
-    <div class="card hidden" id="pzImgCard"><h3>Brooks 收盘图（虚线 = 这道题的 K 线）</h3><div style="position:relative"><img id="pzImg" alt="Brooks 收盘图"><canvas id="pzImgOv"></canvas></div></div>
     <div class="card"><h3>各主题正确率</h3><div id="pzStats"></div></div>
   </div>
 </section>
@@ -140,9 +138,6 @@
       <div class="card" id="studyBox"></div>
     </div>
     <div class="main-col">
-      <div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">Brooks 收盘图（原图）</h3><span class="small muted">鼠标指到任一张图，两张图同步显示同一根 K 线</span></div>
-        <div class="img-wrap" style="margin-top:8px"><img id="imgBrooks" alt="Brooks 收盘图"><canvas id="cvImgOv"></canvas></div>
-        <div id="imgMissing" class="muted small hidden">找不到原图：请重新运行 build.py。</div></div>
       <div class="card">
         <div class="layers" id="layers"><span class="jlabel">我的图 · 图层</span></div>
         <div class="chart-wrap"><canvas id="cvReview"></canvas><div id="tipBox2" class="tip-box hidden"></div><div id="modeHint2" class="mode-hint hidden"></div></div>
@@ -165,8 +160,6 @@
 <div id="modal" class="modal hidden"><div class="modal-card" id="modalCard"></div></div>
 <script src="data/index.js"></script>
 <script src="autoread.js"></script>
-<script src="data/askal.js"></script>
-<script src="data/puzzles.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
