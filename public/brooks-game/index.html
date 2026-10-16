@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brooks 读图训练 2</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">PA</span>Brooks 读图训练 <span style="font-size:11px;background:#7b5cd6;color:#fff;padding:2px 7px;border-radius:10px;margin-left:2px">第二版</span> <span class="lv" id="levelInfo"></span></div>
+  <div class="top-actions">
+    <label class="switch" title="鼠标停在标注上时显示简单解释"><input type="checkbox" id="tgTips" checked> 形态注释</label>
+    <label class="switch" title="关掉后，走到 Brooks 有评论的 K 线不再提问、不暂停；跳过的题不计分。开关会被记住"><input type="checkbox" id="tgAsk" checked> Brooks 提问</label>
+    <button class="tbtn" id="btnHome" title="关卡列表"><svg class="i" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>关卡</button>
+    <button class="tbtn" id="btnPuzzle" title="关键 K 线决策题库：一题一个决策点，答完看 Brooks 原图和原句"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>决策题库</button>
+    <button class="tbtn" id="btnStats" title="统计、错题本、快速练习"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>统计与错题本</button>
+    <button class="tbtn" id="btnFeedback" title="随手记下想改进的地方"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg>反馈</button>
+    <button class="tbtn" id="btnHelp" title="操作说明"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg>说明</button>
+  </div>
+</header>
+
+<!-- 关卡 -->
+<section id="scrHome" class="screen">
+  <div class="home-wrap">
+    <div class="hero"><h2>一根一根地读 ES 5 分钟图，用 Brooks 当天的答案检验自己</h2>
+      <p><b>第二版：</b>K 线改用 TradingView 配色；always-in 和背景由软件按 Brooks 原则自动判读（可改判，也可以关掉自己练）；K 线类型（十字、外包、内包、反转 K、收盘位置、连续同向、开盘跳空）自动标注。<br>双顶 / 双底 / 楔形、强趋势 K 的自动识别在 10 月数据上与 Brooks 一致率未达 80%，暂不加入（详见 eval/pattern-eval.md）。<br>盘中：方向、背景、信号、下单，都是一键。走到 Brooks 有评论的 K 线会提问。<br>收盘后：在“复盘工作室”里逐条对照他的原图和原话，亲手描一遍双顶、楔形、等距目标和他的入场。</p></div>
+    <div id="levelList" class="level-list"></div>
+  </div>
+</section>
+
+<!-- 开盘前 -->
+<section id="scrPre" class="screen hidden">
+  <div class="pre-grid">
+    <div class="card"><h3>日线（由日盘合成，最近 <span id="dailyN"></span> 天）</h3><canvas id="cvDaily" class="cv-pre"></canvas></div>
+    <div class="card"><h3>昨日 5 分钟（<span id="ydDate"></span>）</h3><canvas id="cvYday" class="cv-pre"></canvas></div>
+    <div class="card"><h3>开盘前</h3><div id="preFacts" class="facts"></div><div id="preQ"></div></div>
+    <div class="card"><h3>夜盘 5 分钟（Globex，<span id="globexN"></span> 根，太平洋时间；夜盘 K 线不编号）</h3><canvas id="cvGlobex" class="cv-pre2"></canvas></div>
+    <div class="card"><h3>1 小时（含夜盘，最近 3 天，太平洋时间整点；淡色 = 夜盘，蓝虚线 = 今天开盘）</h3><canvas id="cvH1pre" class="cv-pre2"></canvas></div>
+  </div>
+</section>
+
+<!-- 决策题库 -->
+<section id="scrPuzzle" class="screen hidden">
+  <div class="pz-grid">
+    <div class="card">
+      <div class="pz-head"><span>等级分 <b id="pzRating">1200</b></span><span class="muted small">本次 <b id="pzSess">0/0</b> · 累计 <b id="pzTotal">0/0</b></span>
+        <select id="pzTheme" class="btn sm"></select><select id="pzType" class="btn sm"></select>
+        <select id="pzSrc" class="btn sm" title="还想盲玩的关卡，题库会提前透露它的走势和答案"><option value="all">全部 47 天</option><option value="done">只出已玩过的关卡</option></select>
+        <label class="small"><input type="checkbox" id="pzTimed" checked> 限时 30 秒</label><button class="btn sm" id="pzSkip">换一题</button></div>
+      <div class="pz-timer"><div id="pzTimerBar"></div></div>
+      <canvas id="cvPuzzle"></canvas>
+      <div class="muted small">只显示到答题那根 K 线为止（淡色是昨天），没有任何辅助线，只有 20 EMA。数字键 1–3 选答案，空格下一题。</div>
+    </div>
+    <div class="card" id="pzBox"></div>
+  </div>
+  <div class="pz-grid2">
+    <div class="card hidden" id="pzImgCard"><h3>Brooks 收盘图（虚线 = 这道题的 K 线）</h3><div style="position:relative"><img id="pzImg" alt="Brooks 收盘图"><canvas id="pzImgOv"></canvas></div></div>
+    <div class="card"><h3>各主题正确率</h3><div id="pzStats"></div></div>
+  </div>
+</section>
+
+<!-- 逐根 -->
+<section id="scrPlay" class="screen hidden">
+  <div class="play">
+    <div class="rail" id="rail">
+      <button data-tool="" title="指针：拖动挂单线 / 止损线 / 目标线（V）"><svg class="i" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 6z"/></svg></button>
+      <button data-tool="label" title="标注形态：选标签再点 K 线；也可以直接右键 K 线（P）"><svg class="i" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg></button>
+      <button data-tool="hline" title="水平线（L）"><svg class="i" viewBox="0 0 24 24"><path d="M3 12h18M3 12h.01M21 12h.01"/></svg></button>
+      <button data-tool="mm" title="测量：按住拖一段腿，画出等距目标（M）"><svg class="i" viewBox="0 0 24 24"><path d="M4 17L17 4l3 3L7 20zM8 13l2 2M11 10l2 2M14 7l2 2"/></svg></button>
+      <div class="sep"></div>
+      <button data-act="undo" title="撤销上一个标注 / 线 / 测量（Z）"><svg class="i" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"/></svg></button>
+    </div>
+
+    <div class="main-col">
+      <div class="judge">
+        <div class="grp"><span class="jlabel">always-in</span><div class="seg" id="segAI"><button data-v="多" title="1">多</button><button data-v="空" title="2">空</button><button data-v="不明确" title="3">不明确</button></div></div>
+        <div class="grp"><span class="jlabel">背景</span><div class="seg" id="segCtx"><button data-v="趋势" title="Q">趋势</button><button data-v="通道" title="W">通道</button><button data-v="区间" title="E">区间</button><button data-v="不确定" title="R">不确定</button></div></div>
+        <div class="grp"><span class="chip on" id="tgAuto" title="开：软件按 Brooks 原则每根自动判读 always-in 和背景，你可以改判；关：练习模式，全部自己判断">自动判读</span></div>
+        <div class="grp"><span class="jlabel">这根是信号 K？</span>
+          <button class="btn sm long" id="btnSigL" title="把最后一根标为多头信号 K（不下单也可以）（↑）">↑ 多头信号</button>
+          <button class="btn sm short" id="btnSigS" title="把最后一根标为空头信号 K（↓）">↓ 空头信号</button></div>
+        <div class="auto-why small" id="autoWhy" title="自动判读是按 Brooks 原则写的近似算法，只用当时已出现的 K 线；它不是 Brooks 的答案。47 天测试：背景约 68% 和 Brooks 阶段一致（按趋势/区间平衡计算），换段时的头几根最容易错。"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-wrap">
+          <canvas id="cvMain"></canvas>
+          <div id="hoverBox" class="hover-box hidden"></div>
+          <div id="tipBox" class="tip-box hidden"></div>
+          <div id="ctxMenu" class="ctx-menu hidden"></div>
+          <div id="modeHint" class="mode-hint hidden"></div>
+        </div>
+        <canvas id="cvStrips" class="cv-strips" title="上：你的 always-in；下：你的背景判断"></canvas>
+        <div class="playbar">
+          <button class="btn lg" id="btnBack" title="后退一根（←）：回到上一根收盘时的状态">◀ 后退</button>
+          <button class="btn primary lg" id="btnNext" title="下一根（空格 / →）">下一根 ▶</button>
+          <button class="btn" id="btnAuto" title="自动播放（A）">自动</button>
+          <select id="selSpeed" class="btn sm" title="速度"><option value="1500">慢</option><option value="800" selected>中</option><option value="350">快</option></select>
+          <div class="progress"><div id="progBar"></div></div>
+          <span class="mono small" id="barInfo"></span>
+        </div>
+      </div>
+      <div id="palette" class="palette hidden"></div>
+      <div id="hlQuiz" class="hl-quiz hidden"></div>
+      <div class="guides" id="guides"><span class="jlabel">辅助线</span></div>
+    </div>
+
+    <aside class="side">
+      <div class="card h1card"><h3>1 小时 <span class="muted small">含夜盘 · 太平洋时间整点 · 最后一根是正在走的这一小时</span></h3><canvas id="cvH1"></canvas></div>
+      <div class="tabs" id="sideTabs"><button data-tab="trade" class="on">交易</button><button data-tab="ask">Brooks 提问<span class="dot hidden" id="askDot"></span></button><button data-tab="log">我的记录</button></div>
+      <div class="pane" data-pane="trade">
+        <div class="card">
+          <div class="bigtrade"><button class="btn long" id="btnBuy" title="点“买”→ 在图上点入场价 → 再点止损价（B）">买</button><button class="btn short" id="btnSell" title="点“卖”→ 在图上点入场价 → 再点止损价（S）">卖</button></div>
+          <p class="help">点入场价、再点止损价。靠近 K 线高低点会吸附到外面 1 tick；现价上方的买单（下方的卖单）是止损单，反之是限价单。线都能拖动。每单 2 手，1 点 = 50 美元。</p>
+          <div class="row"><button class="btn sm" id="btnSigBuy" title="一键：最后一根高点上方 1 tick 买入止损，止损在它低点下方（Shift+B）">信号 K 上方买</button>
+            <button class="btn sm" id="btnSigSell" title="一键：最后一根低点下方 1 tick 卖出止损，止损在它高点上方（Shift+S）">信号 K 下方卖</button></div>
+          <label class="small muted" style="display:block;margin-top:8px"><input type="checkbox" id="tgAutoCancel" checked> 挂单下一根没成交就自动撤（Brooks 的默认做法）</label>
+        </div>
+        <div class="card"><h3>挂单与持仓</h3><div id="posBox"></div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn sm" id="btnT1">目标 1R</button><button class="btn sm" id="btnT2">目标 2R</button><button class="btn sm" id="btnT0">无目标</button>
+            <button class="btn sm" id="btnBE">保本</button><button class="btn sm" id="btnHalf" title="H">平一半</button><button class="btn sm" id="btnFlat" title="X">全平</button><button class="btn sm" id="btnCancel" title="C">撤单</button></div></div>
+      </div>
+      <div class="pane hidden" data-pane="ask"><div class="card" id="askBox"><div class="empty">走到 Brooks 有评论的 K 线时，问题会出现在这里。</div></div></div>
+      <div class="pane hidden" data-pane="log">
+        <div class="card"><div class="kpis" id="kpis"></div></div>
+        <div class="card"><h3>交易 <span class="muted small">（可选：标 setup，统计按它分类）</span></h3><div class="list" id="tradeList"></div></div>
+        <div class="card"><h3>我标的信号 K</h3><div class="list" id="sigList"></div></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- 复盘工作室 -->
+<section id="scrReview" class="screen hidden">
+  <div class="studio">
+    <div class="study-panel">
+      <div class="steps-nav" id="studyNav"><button data-s="walk" class="on">① 讲解回放</button><button data-s="trace">② 亲手描</button><button data-s="sum">③ 总结</button></div>
+      <div class="card" id="studyBox"></div>
+    </div>
+    <div class="main-col">
+      <div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">Brooks 收盘图（原图）</h3><span class="small muted">鼠标指到任一张图，两张图同步显示同一根 K 线</span></div>
+        <div class="img-wrap" style="margin-top:8px"><img id="imgBrooks" alt="Brooks 收盘图"><canvas id="cvImgOv"></canvas></div>
+        <div id="imgMissing" class="muted small hidden">找不到原图：请重新运行 build.py。</div></div>
+      <div class="card">
+        <div class="layers" id="layers"><span class="jlabel">我的图 · 图层</span></div>
+        <div class="chart-wrap"><canvas id="cvReview"></canvas><div id="tipBox2" class="tip-box hidden"></div><div id="modeHint2" class="mode-hint hidden"></div></div>
+        <canvas id="cvStrips2" class="cv-strips" style="height:64px" title="从上到下：我的 always-in、我的背景（紫点 = 我改判过）、自动判读的背景、由 Brooks 标注推出的阶段"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 统计 / 错题本 -->
+<section id="scrStats" class="screen hidden">
+  <div class="stats-grid">
+    <div class="card"><h2>成绩</h2><div id="statsBox"></div>
+      <div class="row" style="margin-top:10px"><button class="btn sm" id="btnExportAll">导出全部进度</button><label class="btn sm">导入进度<input type="file" id="fileImport" accept=".json" hidden></label><button class="btn sm danger" id="btnReset">清空进度</button></div></div>
+    <div class="card"><h2>错题本 · 快速练习</h2><div id="drillBox" class="hidden"><canvas id="cvDrill"></canvas><div id="drillQ"></div></div><div id="wrongBox"></div></div>
+    <div class="card al-lib"><h2>Al 问答卡</h2><div id="alLib"></div></div>
+  </div>
+</section>
+
+<div id="modal" class="modal hidden"><div class="modal-card" id="modalCard"></div></div>
+<script src="data/index.js"></script>
+<script src="autoread.js"></script>
+<script src="data/askal.js"></script>
+<script src="data/puzzles.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

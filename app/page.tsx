@@ -30,6 +30,6 @@ export default function Home() {
     </section>
     <section id="publications" className="formal-publications"><h2>Publications</h2>{["2026", "2019", "2018"].map(year => <div className="pub-year" key={year}><p>{year}</p><div>{publications.filter(item => item.year === year).map(item => <article key={item.title}>{item.link ? <a href={item.link} target="_blank" rel="noreferrer">{item.title}</a> : <strong className="publication-title">{item.title}</strong>}<p>{item.authors}<br/>{item.venue}</p></article>)}</div></div>)}</section>
     <section id="about" className="formal-about"><h2>About me</h2><p className="formal-intro">My background bridges mechanical engineering, piezoelectric MEMS, industrial device development and nanofabrication research.</p><div className="formal-timeline">{timeline.map(([time, organisation, description]) => <article key={time}><div className="timeline-org"><p>{time}</p><strong>{organisation}</strong></div><div className="timeline-point"/><div className="timeline-role"><p>{description}</p></div></article>)}<div className="timeline-chip" aria-hidden="true"><span/></div></div></section>
-    <footer>© {new Date().getFullYear()} Xinxin Liu</footer>
+    <footer><a className="footer-game-link" href="/Xinxin/brooks-game/" aria-label="Open Brooks chart-reading game" title="Brooks chart-reading game">©</a> {new Date().getFullYear()} Xinxin Liu</footer>
   </main>;
 }
