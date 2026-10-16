@@ -205,3 +205,49 @@ th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line
 #pzImg { width: 100%; display: block; } #pzImgOv { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
 #pzBox .quote { margin: 6px 0; padding: 6px 8px; background: #f7f8fa; border-radius: 6px; font-size: 13px; line-height: 1.5; }
 @media (max-width: 1200px) { .pz-grid, .pz-grid2 { grid-template-columns: 1fr; } }
+
+/* 手机横屏：训练时保持一页完成，不需要上下滚动 */
+.rotate-notice { display: none; }
+@media (max-width: 950px) and (orientation: landscape) {
+  html:has(#scrPlay:not(.hidden)), body:has(#scrPlay:not(.hidden)) { height: 100%; overflow: hidden; }
+  .topbar { height: 38px; padding: 0 9px; }
+  .brand { gap: 6px; font-size: 12px; white-space: nowrap; }
+  .brand .logo { width: 22px; height: 22px; border-radius: 6px; font-size: 11px; }
+  .top-actions { gap: 1px; }
+  .top-actions .switch { display: none; }
+  .top-actions .tbtn { font-size: 0; padding: 6px; }
+  .top-actions .tbtn .i { width: 17px; height: 17px; }
+  #scrPlay:not(.hidden) { height: calc(100dvh - 38px); padding: 5px 7px; overflow: hidden; }
+  #scrPlay:not(.hidden) .play { grid-template-columns: 38px minmax(0, 1fr) 210px; gap: 6px; height: 100%; align-items: start; }
+  #scrPlay:not(.hidden) .rail { position: static; padding: 3px; gap: 2px; border-radius: 7px; }
+  #scrPlay:not(.hidden) .rail button { width: 30px; height: 30px; }
+  #scrPlay:not(.hidden) .main-col { gap: 5px; min-height: 0; }
+  #scrPlay:not(.hidden) .judge { gap: 5px; padding: 4px 6px; border-radius: 7px; flex-wrap: nowrap; overflow: hidden; }
+  #scrPlay:not(.hidden) .judge .grp { gap: 2px; flex-shrink: 0; }
+  #scrPlay:not(.hidden) .judge .jlabel { display: none; }
+  #scrPlay:not(.hidden) .judge .seg button { padding: 4px 6px; font-size: 11px; }
+  #scrPlay:not(.hidden) .judge .chip { padding: 3px 7px; font-size: 10px; }
+  #scrPlay:not(.hidden) #btnSigL, #scrPlay:not(.hidden) #btnSigS { padding: 4px 7px; font-size: 11px; }
+  #scrPlay:not(.hidden) .auto-why, #scrPlay:not(.hidden) .guides { display: none; }
+  #scrPlay:not(.hidden) .chart-card { min-height: 0; }
+  #scrPlay:not(.hidden) #cvMain { height: calc(100dvh - 150px); min-height: 190px; }
+  #scrPlay:not(.hidden) .cv-strips { height: 22px; }
+  #scrPlay:not(.hidden) .playbar { gap: 5px; padding: 5px 7px; }
+  #scrPlay:not(.hidden) .playbar .btn { padding: 5px 7px; font-size: 11px; }
+  #scrPlay:not(.hidden) .playbar .lg { font-size: 12px; }
+  #scrPlay:not(.hidden) .playbar .progress, #scrPlay:not(.hidden) .playbar #barInfo { display: none; }
+  #scrPlay:not(.hidden) .side { grid-column: auto; position: static; gap: 5px; max-height: calc(100dvh - 48px); overflow: auto; }
+  #scrPlay:not(.hidden) .h1card, #scrPlay:not(.hidden) .side .help, #scrPlay:not(.hidden) .side #tgAutoCancel { display: none; }
+  #scrPlay:not(.hidden) .tabs { padding: 2px; border-radius: 7px; }
+  #scrPlay:not(.hidden) .tabs button { padding: 6px 2px; font-size: 11px; }
+  #scrPlay:not(.hidden) .side .card { padding: 8px; border-radius: 7px; }
+  #scrPlay:not(.hidden) .bigtrade .btn { font-size: 14px; padding: 8px; }
+  #scrPlay:not(.hidden) .side .row { gap: 4px; }
+  #scrPlay:not(.hidden) .side .btn.sm { padding: 4px 5px; font-size: 10px; }
+  #scrPlay:not(.hidden) .palette:not(.hidden), #scrPlay:not(.hidden) .hl-quiz:not(.hidden) { max-height: 72px; overflow: auto; }
+}
+@media (max-width: 950px) and (orientation: portrait) {
+  .rotate-notice { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; padding: 28px; text-align: center; color: #e9ecf1; background: #15181d; }
+  .rotate-notice strong { font-size: 21px; }
+  .rotate-notice span { color: #c9cfd8; font-size: 14px; line-height: 1.6; }
+}
