@@ -32,7 +32,8 @@
       <section class="action-card">
         <div class="prompt-copy"><span class="tiny-mark">✦</span><p>这一根 K 线，我要怎么做？</p></div>
         <div class="trade-actions"><button id="signalBtn" class="signal-btn">◇ Signal K</button><div class="buy-sell"><button id="buyBtn" class="buy-btn">Buy</button><button id="sellBtn" class="sell-btn">Sell</button></div></div>
-        <div class="trade-status" id="tradeStatus">选择 Buy / Sell 后，在图表上依次点入场价与止损价。</div>
+        <div class="trade-status" id="tradeStatus">Buy / Sell 会按当前 K 线自动挂单；图上任意位置按住拖动可调整最近价位。</div>
+        <div class="order-tools"><button id="extremeStopBtn" disabled>前低止损</button><span>拖动图中任意位置，松手固定</span></div>
         <div class="position-card" id="positionCard"></div>
         <div class="manage-row" id="manageRow"><button data-manage="t1">1R</button><button data-manage="t2">2R</button><button data-manage="be">BE</button><button data-manage="half">Half</button><button data-manage="flat">Flat</button><button data-manage="cancel">Cancel</button></div>
         <section class="note-card"><label for="note">一句话记录 <span>可选</span></label><textarea id="note" maxlength="280" placeholder="例如：二次测试失败，先不追…"></textarea></section>
