@@ -30,9 +30,11 @@
       <div class="progress-row"><div class="level-dots" id="levelDots"></div><span id="barCount">0 / 0</span></div>
       <div class="chart-card"><canvas id="chart" aria-label="ES 5 minute chart"></canvas><div class="chart-glow"></div><div class="candle-badge" id="candleBadge">第 1 根</div></div>
       <section class="action-card">
-        <div class="prompt-copy"><span class="tiny-mark">✦</span><p>这一根 K 线，我的动作或判断</p></div>
-        <p class="mini-label">点选所有适用项 <span>可多选</span></p>
-        <div class="action-grid compact-grid" id="actionChoices"><button data-action="Signal K">Signal K</button><button data-action="Buy">Buy</button><button data-action="Sell">Sell</button><button data-action="Wait">Wait</button><button data-action="No trade">No trade</button><button data-action="Trend">Trend</button><button data-action="Range">Range</button><button data-action="No trend">No trend</button><button data-action="Breakout">Breakout</button><button data-action="Failed BO">Failed BO</button></div>
+        <div class="prompt-copy"><span class="tiny-mark">✦</span><p>这一根 K 线，我要怎么做？</p></div>
+        <div class="trade-actions"><button id="signalBtn" class="signal-btn">◇ Signal K</button><div class="buy-sell"><button id="buyBtn" class="buy-btn">Buy</button><button id="sellBtn" class="sell-btn">Sell</button></div></div>
+        <div class="trade-status" id="tradeStatus">选择 Buy / Sell 后，在图表上依次点入场价与止损价。</div>
+        <div class="position-card" id="positionCard"></div>
+        <div class="manage-row" id="manageRow"><button data-manage="t1">1R</button><button data-manage="t2">2R</button><button data-manage="be">BE</button><button data-manage="half">Half</button><button data-manage="flat">Flat</button><button data-manage="cancel">Cancel</button></div>
         <section class="note-card"><label for="note">一句话记录 <span>可选</span></label><textarea id="note" maxlength="280" placeholder="例如：二次测试失败，先不追…"></textarea></section>
       </section>
       <footer class="action-dock"><button id="backBtn" class="round-action" aria-label="上一根">‹</button><button id="nextBtn" class="next-action">保存这一根，下一根 <span>→</span></button></footer>
