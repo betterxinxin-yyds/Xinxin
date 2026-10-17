@@ -9,6 +9,7 @@
 </head>
 <body>
   <div class="sky sky-a"></div><div class="sky sky-b"></div><div class="stars" aria-hidden="true"></div>
+  <div class="rotate-landscape" role="status"><img src="assets/chart-buddy.png" alt=""><strong>横屏，进入读图模式</strong><span>将手机旋转至横向，获得完整的价格刻度与操作面板。</span></div>
   <main class="phone-shell">
     <header class="mobile-top"><button class="icon-btn" id="homeBtn" aria-label="回到关卡">⌂</button><div class="brand"><span>CHART</span> QUEST</div><button class="icon-btn" id="exportBtn" aria-label="导出记录">⇩</button></header>
 
@@ -28,15 +29,13 @@
       <div class="practice-head"><div><span class="eyebrow" id="dayEyebrow">TODAY'S CHART</span><h2 id="dayTitle">Loading…</h2></div><button class="quit-btn" id="quitBtn">保存并退出</button></div>
       <div class="progress-row"><div class="level-dots" id="levelDots"></div><span id="barCount">0 / 0</span></div>
       <div class="chart-card"><canvas id="chart" aria-label="ES 5 minute chart"></canvas><div class="chart-glow"></div><div class="candle-badge" id="candleBadge">第 1 根</div></div>
-      <section class="prompt-card">
-        <div class="prompt-copy"><span class="tiny-mark">✦</span><p id="promptText">看这一根收盘后，你的第一判断是什么？</p></div>
-        <div class="choice-row" id="aiChoices"><button data-group="ai" data-value="多">↗ 多</button><button data-group="ai" data-value="空">↘ 空</button><button data-group="ai" data-value="不明确">？ 不明</button></div>
-        <p class="mini-label">你看到的环境</p>
-        <div class="choice-row four" id="ctxChoices"><button data-group="ctx" data-value="趋势">趋势</button><button data-group="ctx" data-value="通道">通道</button><button data-group="ctx" data-value="区间">区间</button><button data-group="ctx" data-value="不确定">不确定</button></div>
-        <div class="signal-line"><span>这是一根信号 K 吗？</span><div id="signalChoices"><button data-group="signal" data-value="yes">是</button><button data-group="signal" data-value="no">否</button></div></div>
+      <section class="action-card">
+        <div class="prompt-copy"><span class="tiny-mark">✦</span><p>这一根 K 线，我的动作或判断</p></div>
+        <p class="mini-label">点选所有适用项 <span>可多选</span></p>
+        <div class="action-grid compact-grid" id="actionChoices"><button data-action="Signal K">Signal K</button><button data-action="Buy">Buy</button><button data-action="Sell">Sell</button><button data-action="Wait">Wait</button><button data-action="No trade">No trade</button><button data-action="Trend">Trend</button><button data-action="Range">Range</button><button data-action="No trend">No trend</button><button data-action="Breakout">Breakout</button><button data-action="Failed BO">Failed BO</button></div>
+        <section class="note-card"><label for="note">一句话记录 <span>可选</span></label><textarea id="note" maxlength="280" placeholder="例如：二次测试失败，先不追…"></textarea></section>
       </section>
-      <section class="note-card"><label for="note">一句话记录 <span>可选</span></label><textarea id="note" maxlength="280" placeholder="例如：二次测试失败，先不追…"></textarea><div class="idea-row"><span>我的计划</span><div id="ideaChoices"><button data-group="idea" data-value="观察">观察</button><button data-group="idea" data-value="找多">找多</button><button data-group="idea" data-value="找空">找空</button><button data-group="idea" data-value="不交易">不交易</button></div></div></section>
-      <footer class="action-dock"><button id="backBtn" class="round-action" aria-label="上一根">‹</button><button id="nextBtn" class="next-action">记录判断，下一根 <span>→</span></button></footer>
+      <footer class="action-dock"><button id="backBtn" class="round-action" aria-label="上一根">‹</button><button id="nextBtn" class="next-action">保存这一根，下一根 <span>→</span></button></footer>
     </section>
 
     <section id="finish" class="view hidden finish-view">
